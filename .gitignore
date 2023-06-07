@@ -1,0 +1,28 @@
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# build
+build
+lib
+dist
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+.pnpm-debug.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ts
+*.tsbuildinfo
+
