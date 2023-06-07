@@ -9,6 +9,7 @@
     "isolatedModules": true,
     "moduleResolution": "node",
     "module": "esnext",
+    "target": "es6",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,

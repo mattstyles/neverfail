@@ -1,22 +1,23 @@
 
 export interface Some<T> {
-  readonly _type: 'Some'
+  readonly _type: 'some'
   value: T
 }
 export interface None {
-  readonly _type: 'None'
+  readonly _type: 'none'
 }
 export type Option<T> = Some<T> | None
 
+
 export function Some<T>(value: T): Some<T> {
   return {
-    _type: 'Some',
+    _type: 'some',
     value
   }
 }
 
 export function None(): None {
   return {
-    _type: 'None'
+    _type: 'none'
   }
 }
