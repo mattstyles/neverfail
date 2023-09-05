@@ -26,11 +26,11 @@ export function err<E>(err: E): Err<E> {
 }
 
 /**
- * Creates an Ok if A is not an instanceof Error
- * Note that JS can throw anything, in which case you should create Ok or Err yourself or consider using `Result.fromPredicate`
+ * Always creates an Ok type.
  */
-export function of<A>(value: A) {
-  return value instanceof Error ? err(value) : ok(value)
+export function of<A>(value: A): Result<A> {
+  // return value instanceof Error ? err(value as Error) : ok(value)
+  return ok(value)
 }
 
 // @TODO
@@ -62,15 +62,31 @@ export function orElse<A>(b: A, a?: Result<A>): A | ((a: Result<A>) => A) {
   return isErr(a) ? b : a.value
 }
 
-export function map<A, B>(fa: (a: A) => B): (a: Result<A>) => Result<B> {
+export function map<A, B, E, F>(
+  fa: (a: A) => B,
+  toErr: (e: unknown) => F
+): (a: Result<A, E>) => Result<B, E | F> {
   return function $map(a) {
-    return isErr(a) ? err(a.err) : of(fa(a.value))
+    // fa could throw, we should wrap here
+    // return isErr(a) ? err(a.err) : of(fa(a.value))
+
+    if (isErr(a)) {
+      return err(a.err)
+    }
+
+    try {
+      const newValue = fa(a.value)
+      return ok(newValue)
+    } catch (e) {
+      return err(toErr(e))
+      // return err(toErr != null ? toErr(e) : e)
+    }
   }
 }
 
-export function flatMap<A, B>(
-  fa: (a: A) => Result<B>
-): (a: Result<A>) => Result<B> {
+export function flatMap<A, B, E, F>(
+  fa: (a: A) => Result<B, E>
+): (a: Result<A, E>) => Result<B, E | F> {
   return function $flatMap(a) {
     return isErr(a) ? err(a.err) : join(map(fa)(a))
   }
